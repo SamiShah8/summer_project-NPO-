@@ -6,6 +6,7 @@ import cardList from "../components/data";
 import { esewaPayment } from "@/api/esewa";
 import { useMutation } from "react-query";
 import { generateHashCode } from "@/utils/helper";
+import KhaltiPayment from "../components/KaltiPayement";
 
 const Page = () => {
   const { id } = useParams();
@@ -15,24 +16,24 @@ const Page = () => {
     e.preventDefault(); // Prevent default form submission behavior
     console.log("here");
 
-    const sig = generateHashCode();
-    console.log(sig);
-    const data = {
-      amount: "100",
-      failure_url: "https://google.com",
-      product_delivery_charge: "0",
-      product_service_charge: "0",
-      product_code: "DONATION",
-      signature: sig,
-      signed_field_names: "total_amount,transaction_uuid,product_code",
-      success_url: "https://esewa.com.np",
-      tax_amount: "10",
-      total_amount: "110",
-      transaction_uuid: "ab14a8f2b02c3",
-      secret: "8gBm/:&EnhH.1/q",
-    };
+    const sig = generateHashCode({ amount: "100", transaction_uuid: "ab14a8f2b02c3"});
+ 
+    const formData = new FormData();
+    formData.append("amount", "100");
+    formData.append("failure_url", "https://google.com");
+    formData.append("product_delivery_charge", "0");
+    formData.append("product_service_charge", "0");
+    formData.append("product_code", "DONATION");
+    formData.append("signature", sig.signature);
+    formData.append("signed_field_names", sig.signed_field_names);
+    formData.append("success_url", "https://esewa.com.np");
+    formData.append("tax_amount", "10");
+    formData.append("total_amount", "110");
+    formData.append("transaction_uuid", "ab14a8f2b02c3");
+    formData.append("secret", "8gBm/:&EnhH.1/q");
+
     try {
-      const response = await esewaPayment(data);
+      const response = await esewaPayment(formData);
       console.log(response);
     } catch (error) {
       console.error("Error making payment:", error);
@@ -176,6 +177,7 @@ const Page = () => {
               >
                 E-Sewa
               </button>
+              <KhaltiPayment />
             </div>
           </div>
         </form>
