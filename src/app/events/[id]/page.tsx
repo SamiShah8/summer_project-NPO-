@@ -50,7 +50,7 @@ const Page = () => {
             {event?.title}
           </h1>
           <p className="font-normal text-green-600">
-            {/* {event && <div dangerouslySetInnerHTML={{ __html: event.text }} />} */}
+             {event && <div dangerouslySetInnerHTML={{ __html: event.text }} />} 
           </p>
         </div>
       </div>

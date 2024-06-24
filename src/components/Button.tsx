@@ -4,18 +4,10 @@ interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   title: string;
 }
 
-interface Animal<T> {
-  eyes: number;
-  legs: T;
-}
-
-interface monkey extends Animal<number> {
-  tails: number;
-}
-
-const Button: React.FC<ButtonProps> = ({ className, title }) => {
+const Button: React.FC<ButtonProps> = ({ className, title, onClick }) => {
   return (
     <button
+      onClick={onClick}
       className={
         "border-none outline-none py-2 px-3 text-white font-semibold  bg-emerald-300 rounded-md " +
         className

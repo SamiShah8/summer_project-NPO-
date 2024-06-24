@@ -1,23 +1,19 @@
 "use client";
 
-
 import Button from "@/components/Button";
 import CarouselHomePage from "@/components/Craousel";
 import cardList from "./events/components/data";
 import { truncateString } from "@/utils/helper";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 
 export default function Home() {
   const router = useRouter();
-  const slicedData = cardList.slice(0, 4);
-  const gotoEventsPage = () => {
-    console.log("here");
-    router.push("events");
-    const gotoId= () => {
-       console.log("click");
-       router.push("id");
 
-    }
+  const slicedData = cardList.slice(0, 4);
+
+  const gotoEventsPage = () => {
+    router.push("events");
   };
   return (
     <div className="mt-[90px]">
@@ -59,26 +55,26 @@ export default function Home() {
       </h1>
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-5 mt-10 p-5">
         {slicedData?.map((data) => (
-       
-            <div className="bg-green-200 shadow-md">
-              <img
-                className="h-80 w-80 object-cover "
-                src={data.img}
-                alt="baground"
-              />
-              <div className="p-5">
-                <h3 className=" mb-1 text-xl mt-1">{data.title}</h3>
-                <p>{truncateString(data.text, 100)}</p>
-              </div>
-              <div className="flex w-full pt-2 py-2 gap-1 justify-center">
+          <div className="bg-green-200 shadow-md">
+            <img
+              className="h-80 w-[100%] object-cover "
+              src={data.img}
+              alt="baground"
+            />
+            <div className="p-5">
+              <h3 className=" mb-1 text-xl mt-1">{data.title}</h3>
+              <p>{truncateString(data.text, 100)}</p>
+            </div>
+            <div className="flex w-full pt-2 py-2 gap-1 justify-center">
+              <Link href={"/events/" + data.id}>
                 <Button
                   title="Click Here"
                   className="border-none outline-none py-2 px-3 text-white font-semibold  bg-emerald-300 rounded-md"
                   // onClick={gotoId}
                 />
-              </div>
+              </Link>
             </div>
-         
+          </div>
         ))}
       </div>
 
@@ -88,8 +84,7 @@ export default function Home() {
           className="border-none outline-none py-2 px-3 text-white font-semibold  bg-emerald-300 rounded-md"
           onClick={gotoEventsPage}
         >
-          {" "}
-          See More{" "}
+          See More
         </button>
       </div>
 
