@@ -20,7 +20,7 @@ const KhaltiPayment = () => {
 
   const paymentButtonClick = () => {
     let config = {
-        publicKey: 'test_public_key_5e5487e7791e4f5cba26493fca37a68d',
+        publicKey: 'd06b70f74f904b5595e2f91b149b3102',
         productIdentity: '1234567890',
         productName: 'Drogon',
         productUrl: 'http://gameofthrones.com/buy/Dragons',

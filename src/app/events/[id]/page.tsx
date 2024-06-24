@@ -12,6 +12,31 @@ const Page = () => {
   const { id } = useParams();
   const event = cardList?.find((da) => da.id === id.toString());
 
+  const esewaClick =  () =>{
+    const sig = generateHashCode({ amount: "100", transaction_uuid: "ab14a8f2b02c3"});
+ 
+    const formData = new FormData();
+    formData.append("amount", "100");
+    formData.append("failure_url", "https://google.com");
+    formData.append("product_delivery_charge", "0");
+    formData.append("product_service_charge", "0");
+    formData.append("product_code", "DONATION");
+    formData.append("signature", sig.signature);
+    formData.append("signed_field_names", sig.signed_field_names);
+    formData.append("success_url", "https://esewa.com.np");
+    formData.append("tax_amount", "10");
+    formData.append("total_amount", "110");
+    formData.append("transaction_uuid", "ab14a8f2b02c3");
+    formData.append("secret", "8gBm/:&EnhH.1/q");
+
+    try {
+      const response = esewaPayment(formData);
+      console.log(response);
+    } catch (error) {
+      console.error("Error making payment:", error);
+    }
+  }
+
   const onSubmit = async (e: any) => {
     e.preventDefault(); // Prevent default form submission behavior
     console.log("here");
@@ -172,7 +197,7 @@ const Page = () => {
                 Offline-payment
               </div>
               <button
-                type="submit"
+                onClick={esewaClick}
                 className="mt-4 px-4 py-2 bg-blue-500 text-white rounded"
               >
                 E-Sewa
