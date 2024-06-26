@@ -1,4 +1,4 @@
- import KhaltiCheckout from 'khalti-checkout-web';
+//  import KhaltiCheckout from 'khalti-checkout-web';
 
 const KhaltiPayment = () => {
   const verifyPayment = async (payload : any) => {
@@ -39,8 +39,8 @@ const KhaltiPayment = () => {
         paymentPreference: ['KHALTI', 'EBANKING', 'MOBILE_BANKING', 'CONNECT_IPS', 'SCT'],
       };
   
-    let checkout = new KhaltiCheckout(config);
-    checkout.show({ amount: 1000 });
+    // let checkout = new KhaltiCheckout(config);
+    // checkout.show({ amount: 1000 });
   }
   return (
     <div>

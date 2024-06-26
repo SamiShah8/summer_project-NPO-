@@ -1,9 +1,25 @@
 // import Image from "next/image";
 // import logo from "../../public/assests/logo.png";
-
+"use client"
 import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
 
 function Navbar() {
+
+ const router = useRouter();
+const [accessToken, setAccessToken] = useState("");
+ useEffect(() => {
+  const token = localStorage.getItem("accessToken");
+  if(token)
+  setAccessToken(token);
+ }, [accessToken, localStorage])
+
+
+ const handleLogout = () => {
+  localStorage.removeItem('accessToken');
+  location.reload();
+ }
   return (
     <header className="flex justify-between items-center h-header-height gap-5 bg-slate-50 shadow-md fixed top-0 w-full  z-50">
       {/* logo  */}
@@ -36,15 +52,27 @@ function Navbar() {
         <Link href="/donate" className="hover:text-green-400 text-xl">
           Donate
         </Link>
+        {accessToken && 
+         <button onClick={handleLogout}>Logout</button>
+        }
+
       </nav>
       {/* login button  */}
       <div className="  bg-transparent w-[150px]">
+        {accessToken ? 
+        <Link
+          className="p-4 rounded-xl border w-16 space-x-1 h-10 bg-blue hover:bg-zinc-300"
+          href="/dashboard"
+        >
+          <span className="text-xl">Dashboard</span>
+        </Link>  :
         <Link
           className="p-4 rounded-xl border w-16 space-x-1 h-10 bg-blue hover:bg-zinc-300"
           href="/login"
         >
           <span className="text-xl">Login</span>
         </Link>
+        }
       </div>
     </header>
   );

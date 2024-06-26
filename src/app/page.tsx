@@ -54,8 +54,8 @@ export default function Home() {
         Recent Events
       </h1>
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-5 mt-10 p-5">
-        {slicedData?.map((data) => (
-          <div className="bg-green-200 shadow-md">
+        {slicedData?.map((data, index) => (
+          <div className="bg-green-200 shadow-md" key={index}>
             <img
               className="h-80 w-[100%] object-cover "
               src={data.img}

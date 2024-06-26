@@ -10,8 +10,8 @@ function Contact() {
           Contact Us
         </h1>
         <h4 className="text-white font-serif">
-          "Reach Out, Make a Difference: Contact Us to Donate Today!, Be the
-          Light: Connect with Us to Donate"
+          Reach Out, Make a Difference: Contact Us to Donate Today!, Be the
+          Light: Connect with Us to Donate
         </h4>
       </div>
       <div className="pl-5 mt-3 ">

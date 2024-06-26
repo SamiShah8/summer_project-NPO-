@@ -13,7 +13,7 @@ const Page = () => {
   const event = cardList?.find((da) => da.id === id.toString());
 
   const esewaClick =  () =>{
-    const sig = generateHashCode({ amount: "100", transaction_uuid: "ab14a8f2b02c3"});
+    const sig = generateHashCode("100", "ab14a8f2b02c3");
  
     const formData = new FormData();
     formData.append("amount", "100");
@@ -41,7 +41,7 @@ const Page = () => {
     e.preventDefault(); // Prevent default form submission behavior
     console.log("here");
 
-    const sig = generateHashCode({ amount: "100", transaction_uuid: "ab14a8f2b02c3"});
+    const sig = generateHashCode(  "100", "ab14a8f2b02c3");
  
     const formData = new FormData();
     formData.append("amount", "100");

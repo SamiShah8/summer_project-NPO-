@@ -7,8 +7,8 @@ function Events() {
     <div>
       <main className="container ">
         <div className="grid lg:grid-cols-3 gap-3 py-8">
-          {cardList.map((card) => (
-            <Link href={"/events/" + card.id}>
+          {cardList.map((card, index) => (
+            <Link href={"/events/" + card.id} key={index}>
               <div className=" shadow-lg rounded-lg">
                 <div className="h-80 w-full rounded-t-lg">
                   <img

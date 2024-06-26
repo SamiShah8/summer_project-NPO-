@@ -3,6 +3,7 @@ import { Roboto } from "next/font/google";
 import "./globals.css";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
+import QueryProvider from "@/providers/QueryProvider";
 
 const roboto = Roboto({ subsets: ["latin"], weight: ["400", "500", "700"] });
 
@@ -20,7 +21,8 @@ export default function RootLayout({
     <html lang="en">
       <body className={roboto.className}>
         <Navbar />
-        <div className="mt-[90px]">{children}</div>
+        <div className="mt-[90px]">
+        <QueryProvider>{children}</QueryProvider></div>
         <Footer/>
       </body>
     </html>

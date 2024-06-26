@@ -11,7 +11,7 @@ function Gallary ({}){
               // onClick={}
             />
             <div className="text-center p-3 text-purple-800 font-bold font-serif">
-              <h3 className=" mb-1 text-xl">Boy's getting stuff</h3>
+              <h3 className=" mb-1 text-xl">Boys getting stuff</h3>
             </div>
           </div>
           <div>

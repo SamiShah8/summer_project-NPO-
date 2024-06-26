@@ -6,8 +6,8 @@ function Donate (){
             Donate Us
           </h1>
           <h4 className="text-white font-serif">
-            "Reach Out, Make a Difference: Contact Us to Donate Today!, Be the
-            Light: Connect with Us to Donate"
+            Reach Out, Make a Difference: Contact Us to Donate Today!, Be the
+            Light: Connect with Us to Donate
           </h4>
         </div>
         <div className="pt-10 pb-10 flex justify-center bg-green-200">
