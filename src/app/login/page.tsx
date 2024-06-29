@@ -1,4 +1,4 @@
-"use client"
+"use client";
 
 import { useState } from "react";
 import Link from "next/link";
@@ -7,8 +7,7 @@ import { useRouter } from "next/navigation";
 function Login() {
   const [formData, setFormData] = useState({ email: "", password: "" });
   const [err, setErr] = useState(false);
-   const router = useRouter();
- 
+  const router = useRouter();
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -20,8 +19,8 @@ function Login() {
 
   const token = localStorage.getItem("accessToken");
 
-  if(token){
-    router.push('/dashboard');
+  if (token) {
+    router.push("/dashboard");
   }
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -29,10 +28,10 @@ function Login() {
     console.log(formData);
 
     try {
-      const response = await fetch('http://127.0.0.1:8000/api/login', {
-        method: 'POST',
+      const response = await fetch("https://tracker.smart.org.np/api/login", {
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
         body: JSON.stringify(formData),
       });
@@ -42,11 +41,11 @@ function Login() {
       } else {
         const data = await response.json();
         localStorage.setItem("accessToken", data.access_token);
-    
+
         location.reload();
       }
     } catch (error) {
-      console.error('Error:', error);
+      console.error("Error:", error);
     }
   };
 
@@ -91,7 +90,11 @@ function Login() {
               placeholder="Enter your Password"
             />
           </div>
-          {err && <span className="text-red-500">These credentials do not matched </span>}
+          {err && (
+            <span className="text-red-500">
+              These credentials do not matched{" "}
+            </span>
+          )}
           <div className="flex items-center flex-col justify-center w-full pt-6 pb-5">
             <label className="text-center" htmlFor=""></label>
             <button
@@ -100,10 +103,13 @@ function Login() {
             >
               Login
             </button>
-            
+
             <div className="flex pt-3">
               <p>Dont have an account?</p>
-              <Link href="/signup" className="hover:[#7b1fa2] pl-2 text-green-600 underline">
+              <Link
+                href="/signup"
+                className="hover:[#7b1fa2] pl-2 text-green-600 underline"
+              >
                 Signup
               </Link>
             </div>

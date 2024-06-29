@@ -20,21 +20,21 @@ function Dashboard() {
   useEffect(() => {
     const token = localStorage.getItem("accessToken");
     if (!token) {
-      router.push('/login');
+      router.push("/login");
       return;
     }
 
     const fetchEvents = async () => {
       try {
-        const response = await fetch('http://127.0.0.1:8000/api/event', {
+        const response = await fetch("https://tracker.smart.org.np/api/event", {
           headers: {
-            'Authorization': `Bearer ${token}`,
+            Authorization: `Bearer ${token}`,
           },
         });
         const data = await response.json();
         setEvents(data?.data);
       } catch (error) {
-        setError('Failed to fetch events');
+        setError("Failed to fetch events");
       }
     };
 
@@ -44,22 +44,29 @@ function Dashboard() {
   const handleStatusChange = async (id: number, status: string) => {
     const token = localStorage.getItem("accessToken");
     try {
-      const response = await fetch(`http://127.0.0.1:8000/api/event/${id}`, {
-        method: 'PATCH',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`,
-        },
-        body: JSON.stringify({ status }),
-      });
+      const response = await fetch(
+        `https://tracker.smart.org.np/api/event/${id}`,
+        {
+          method: "PATCH",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify({ status }),
+        }
+      );
 
       if (response.ok) {
-        setEvents(events.map(event => event.id === id ? { ...event, status } : event));
+        setEvents(
+          events.map((event) =>
+            event.id === id ? { ...event, status } : event
+          )
+        );
       } else {
-        setError('Failed to update event status');
+        setError("Failed to update event status");
       }
     } catch (error) {
-      setError('Failed to update event status');
+      setError("Failed to update event status");
     }
   };
 
@@ -73,7 +80,9 @@ function Dashboard() {
         <h1 className="text-green-600 font-bold uppercase text-2xl">Events</h1>
         <Button title="Create Event" onClick={createEventHandler} />
       </div>
-      {error && <div className="bg-red-500 text-white p-3 rounded">{error}</div>}
+      {error && (
+        <div className="bg-red-500 text-white p-3 rounded">{error}</div>
+      )}
       <table className="table-auto w-full text-left border bg-white-800 shadow-sm rounded">
         <thead className="text-xs text-gray-900 uppercase">
           <tr>
@@ -86,20 +95,49 @@ function Dashboard() {
           </tr>
         </thead>
         <tbody className="text-md">
-          {events && events.length > 0 && events?.map((event, index) => (
-            <tr key={event.id} className="border-b">
-              <td className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap">{index + 1}</td>
-              <td className="px-6 py-4">{event.title}</td>
-              <td className="px-6 py-4">{event.purpose}</td>
-              <td className="px-6 py-4">{event.name}</td>
-              <td className={`px-6 py-4 ${event.status === 'approved' ? 'text-green-500' : event.status === 'rejected' ? 'text-red-500' : 'text-yellow-500'}`}>{event.status}</td>
-              <td className="px-6 py-4 flex gap-2">
-                <button onClick={() => handleStatusChange(event.id, 'approved')} className="bg-green-500 text-white p-2 rounded">Approve</button>
-                <button onClick={() => handleStatusChange(event.id, 'rejected')} className="bg-red-500 text-white p-2 rounded">Reject</button>
-                <Link className="bg-blue-400 text-white p-2 rounded" href={`/dashboard/create-event/${event.id}`}>View</Link>
-              </td>
-            </tr>
-          ))}
+          {events &&
+            events.length > 0 &&
+            events?.map((event, index) => (
+              <tr key={event.id} className="border-b">
+                <td className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap">
+                  {index + 1}
+                </td>
+                <td className="px-6 py-4">{event.title}</td>
+                <td className="px-6 py-4">{event.purpose}</td>
+                <td className="px-6 py-4">{event.name}</td>
+                <td
+                  className={`px-6 py-4 ${
+                    event.status === "approved"
+                      ? "text-green-500"
+                      : event.status === "rejected"
+                      ? "text-red-500"
+                      : "text-yellow-500"
+                  }`}
+                >
+                  {event.status}
+                </td>
+                <td className="px-6 py-4 flex gap-2">
+                  <button
+                    onClick={() => handleStatusChange(event.id, "approved")}
+                    className="bg-green-500 text-white p-2 rounded"
+                  >
+                    Approve
+                  </button>
+                  <button
+                    onClick={() => handleStatusChange(event.id, "rejected")}
+                    className="bg-red-500 text-white p-2 rounded"
+                  >
+                    Reject
+                  </button>
+                  <Link
+                    className="bg-blue-400 text-white p-2 rounded"
+                    href={`/dashboard/create-event/${event.id}`}
+                  >
+                    View
+                  </Link>
+                </td>
+              </tr>
+            ))}
         </tbody>
       </table>
     </div>

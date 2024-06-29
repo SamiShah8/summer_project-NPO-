@@ -1,6 +1,6 @@
-"use client"
+"use client";
 
-import { useState } from 'react';
+import { useState } from "react";
 
 interface EventFormData {
   title: string;
@@ -13,29 +13,33 @@ interface EventFormData {
   bank_account?: string;
   bank_name?: string;
   purpose?: string;
-  status?: 'approved' | 'pending' | 'rejected';
+  status?: "approved" | "pending" | "rejected";
 }
 
 const Form = () => {
   const initialFormData: EventFormData = {
-    title: '',
-    description: '',
-    email_verified_at: '',
+    title: "",
+    description: "",
+    email_verified_at: "",
     cover: undefined,
     image: undefined,
-    name: '',
-    contact_number: '',
-    bank_account: '',
-    bank_name: '',
-    purpose: '',
-    status: 'pending',
+    name: "",
+    contact_number: "",
+    bank_account: "",
+    bank_name: "",
+    purpose: "",
+    status: "pending",
   };
 
   const [formData, setFormData] = useState<EventFormData>(initialFormData);
   const [err, setErr] = useState(false);
   const [success, setSuccess] = useState(false);
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
+  const handleInputChange = (
+    e: React.ChangeEvent<
+      HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
+    >
+  ) => {
     const { name, value } = e.target;
     setFormData({
       ...formData,
@@ -65,8 +69,8 @@ const Form = () => {
     }
 
     try {
-      const response = await fetch('http://127.0.0.1:8000/api/event', {
-        method: 'POST',
+      const response = await fetch("https://tracker.smart.org.np/api/event", {
+        method: "POST",
         body: data,
       });
 
@@ -79,14 +83,18 @@ const Form = () => {
         setFormData(initialFormData);
       }
     } catch (error) {
-      console.error('Error:', error);
+      console.error("Error:", error);
     }
   };
 
   return (
     <div className="p-10">
       <h1 className="text-green-600 text-3xl font-sans ">EVENT DETAILS FORM</h1>
-      {success && <div className="bg-green-500 text-white p-3 rounded">Event created successfully!</div>}
+      {success && (
+        <div className="bg-green-500 text-white p-3 rounded">
+          Event created successfully!
+        </div>
+      )}
       <form onSubmit={handleSubmit} className="flex flex-col h-full w-full">
         <div className="flex w-full pt-6 px-2 flex-col ">
           <label className="items-center text-black" htmlFor="title">
@@ -155,7 +163,10 @@ const Form = () => {
               />
             </div>
             <div className="flex w-full pt-6 px-2 flex-col">
-              <label className="flex items-center text-black" htmlFor="email_verified_at">
+              <label
+                className="flex items-center text-black"
+                htmlFor="email_verified_at"
+              >
                 Email:
               </label>
               <input
@@ -168,7 +179,10 @@ const Form = () => {
               />
             </div>
             <div className="flex w-full pt-6 px-2 flex-col">
-              <label className="items-center text-black" htmlFor="contact_number">
+              <label
+                className="items-center text-black"
+                htmlFor="contact_number"
+              >
                 Phone Number:
               </label>
               <input
