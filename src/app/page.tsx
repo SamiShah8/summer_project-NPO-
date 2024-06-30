@@ -6,15 +6,43 @@ import cardList from "./events/components/data";
 import { truncateString } from "@/utils/helper";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import { useEffect, useState } from "react";
 
 export default function Home() {
   const router = useRouter();
-
-  const slicedData = cardList.slice(0, 4);
+  const [events, setEvents] = useState<any[]>([]);
+  const [error, setError] = useState<string | null>(null);
 
   const gotoEventsPage = () => {
     router.push("events");
   };
+
+  useEffect(() => {
+    const token = localStorage.getItem("accessToken");
+
+    const fetchEvents = async () => {
+      try {
+        const response = await fetch(
+          "https://tracker.smart.org.np/api/events/all",
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+        const data = await response.json();
+        const eventArray = Object.values(data);
+        console.log(data);
+        setEvents(eventArray);
+      } catch (error) {
+        setError("Failed to fetch events");
+      }
+    };
+
+    fetchEvents();
+  }, [router]);
+
+  const slicedData = events?.slice(0, 4);
   return (
     <div className="mt-[90px]">
       <CarouselHomePage />
@@ -58,12 +86,12 @@ export default function Home() {
           <div className="bg-green-200 shadow-md" key={index}>
             <img
               className="h-80 w-[100%] object-cover "
-              src={data.img}
+              src={"https://tracker.smart.org.np/storage/" + data?.image}
               alt="baground"
             />
             <div className="p-5">
               <h3 className=" mb-1 text-xl mt-1">{data.title}</h3>
-              <p>{truncateString(data.text, 100)}</p>
+              <p>{truncateString(data?.description, 100)}</p>
             </div>
             <div className="flex w-full pt-2 py-2 gap-1 justify-center">
               <Link href={"/events/" + data.id}>

@@ -19,7 +19,7 @@ interface Event {
 
 function Events() {
   const router = useRouter();
-  const [events, setEvents] = useState<Event[]>([]);
+  const [events, setEvents] = useState<any[]>([]);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
@@ -36,7 +36,9 @@ function Events() {
           }
         );
         const data = await response.json();
-        setEvents(data);
+        const eventArray = Object.values(data);
+        console.log(data);
+        setEvents(eventArray);
       } catch (error) {
         setError("Failed to fetch events");
       }
@@ -45,13 +47,13 @@ function Events() {
     fetchEvents();
   }, [router]);
 
-  console.log(events);
+  console.log(Array.isArray(events));
   return (
     <div>
       <main className="container ">
         <div className="grid lg:grid-cols-3 gap-3 py-8">
           {events &&
-            events.length > 0 &&
+            Array.isArray(events) &&
             events?.map((card, index) => (
               <Link href={"/events/" + card?.id} key={index}>
                 <div className=" shadow-lg rounded-lg">
@@ -73,27 +75,6 @@ function Events() {
                 </div>
               </Link>
             ))}
-          {cardList.map((card, index) => (
-            <Link href={"/events/" + card.id} key={index}>
-              <div className=" shadow-lg rounded-lg">
-                <div className="h-80 w-full rounded-t-lg">
-                  <img
-                    className="rounded-t-lg text-center h-full w-full object-cover"
-                    src={card.img}
-                    alt={card.title}
-                  />
-                </div>
-                <div className="">
-                  <h3 className="text-3lx font-bold text-slate-700 mb-3">
-                    {card.title}
-                  </h3>
-                  <p className="text-lg font-normal text-gray">
-                    {truncateString(card.text, 100)}
-                  </p>
-                </div>
-              </div>
-            </Link>
-          ))}
         </div>
       </main>
     </div>
