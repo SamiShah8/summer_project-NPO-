@@ -24,10 +24,6 @@ function Events() {
 
   useEffect(() => {
     const token = localStorage.getItem("accessToken");
-    if (!token) {
-      router.push("/login");
-      return;
-    }
 
     const fetchEvents = async () => {
       try {
