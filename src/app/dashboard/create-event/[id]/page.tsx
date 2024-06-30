@@ -43,6 +43,7 @@ function EventDetailPage() {
         }
 
         const data = await response.json();
+
         setEvent(data);
       } catch (error) {
         setError("Unable to fetch the data");
@@ -73,7 +74,10 @@ function EventDetailPage() {
         }
 
         const data = await response.json();
-        setDonation(data);
+        const eventArray = Object.values(data);
+        console.log(data);
+
+        setDonation(eventArray);
       } catch (error) {
         setError("Unable to fetch the data");
       }
