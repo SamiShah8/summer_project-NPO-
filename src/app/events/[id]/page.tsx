@@ -1,20 +1,36 @@
 "use client";
 
 import { useParams, useRouter } from "next/navigation";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import cardList from "../components/data";
 import { esewaPayment } from "@/api/esewa";
 import { useMutation } from "react-query";
 import { generateHashCode } from "@/utils/helper";
 import KhaltiPayment from "../components/KaltiPayement";
 
+interface EventDetail {
+  id: number;
+  title: string;
+  description: string;
+  name: string;
+  contact_number: string;
+  bank_account: string;
+  bank_name: string;
+  purpose: string;
+  status: string;
+  cover: string;
+  image: string;
+}
+
 const Page = () => {
   const { id } = useParams();
-  const event = cardList?.find((da) => da.id === id.toString());
+  // const event = cardList?.find((da) => da.id === id.toString());
+  const [event, setEvent] = useState<EventDetail | null>(null);
+  const [error, setError] = useState<string | null>(null);
 
-  const esewaClick =  () =>{
+  const esewaClick = () => {
     const sig = generateHashCode("100", "ab14a8f2b02c3");
- 
+
     const formData = new FormData();
     formData.append("amount", "100");
     formData.append("failure_url", "https://google.com");
@@ -35,14 +51,14 @@ const Page = () => {
     } catch (error) {
       console.error("Error making payment:", error);
     }
-  }
+  };
 
   const onSubmit = async (e: any) => {
     e.preventDefault(); // Prevent default form submission behavior
     console.log("here");
 
-    const sig = generateHashCode(  "100", "ab14a8f2b02c3");
- 
+    const sig = generateHashCode("100", "ab14a8f2b02c3");
+
     const formData = new FormData();
     formData.append("amount", "100");
     formData.append("failure_url", "https://google.com");
@@ -65,18 +81,58 @@ const Page = () => {
     }
   };
 
+  useEffect(() => {
+    const token = localStorage.getItem("accessToken");
+
+    const fetchEvent = async () => {
+      try {
+        const response = await fetch(
+          `https://tracker.smart.org.np/api/event/${id}`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+
+        if (!response.ok) {
+          throw new Error("Failed to fetch event details");
+        }
+
+        const data = await response.json();
+        setEvent(data);
+      } catch (error) {
+        setError("Unable to fetch the data");
+      }
+    };
+
+    if (id) {
+      fetchEvent();
+    }
+  }, [id]);
+
+  if (!event) {
+    return <div>Loading...</div>;
+  }
+
+  console.log(event);
   return (
     <div className="p-10 shadow-lg rounded-lg flex items-center justify-center flex-col">
       <div className="grid grid-cols-2 gap-4 mb-10">
         <div className="w-full flex justify-center object-cover">
-          <img src={event?.img} alt={event?.title} />
+          <img
+            src={"https://tracker.smart.org.np/storage/" + event.image}
+            alt={event?.title}
+          />
         </div>
         <div>
           <h1 className="text-4xl font-bold text-slate-700 mb-3">
-            {event?.title}
+            {event.title}
           </h1>
           <p className="font-normal text-green-600">
-             {event && <div dangerouslySetInnerHTML={{ __html: event.text }} />} 
+            {event && (
+              <div dangerouslySetInnerHTML={{ __html: event.description }} />
+            )}
           </p>
         </div>
       </div>
