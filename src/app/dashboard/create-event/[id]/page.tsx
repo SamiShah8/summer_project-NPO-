@@ -163,16 +163,16 @@ function EventDetailPage() {
             </tr>
           </thead>
           <tbody>
-            {donation.map((donation) => (
+            {donation?.map((donation: any) => (
               <tr key={donation.id}>
-                <td className="border px-4 py-2">{donation.first_name}</td>
-                <td className="border px-4 py-2">{donation.last_name}</td>
-                <td className="border px-4 py-2">{donation.email}</td>
-                <td className="border px-4 py-2">{donation.country}</td>
-                <td className="border px-4 py-2">{donation.city}</td>
-                <td className="border px-4 py-2">{donation.zip}</td>
-                <td className="border px-4 py-2">{donation.paymentMethod}</td>
-                <td className="border px-4 py-2">{donation.amount}</td>
+                <td className="border px-4 py-2">{donation?.first_name}</td>
+                <td className="border px-4 py-2">{donation?.last_name}</td>
+                <td className="border px-4 py-2">{donation?.email}</td>
+                <td className="border px-4 py-2">{donation?.country}</td>
+                <td className="border px-4 py-2">{donation?.city}</td>
+                <td className="border px-4 py-2">{donation?.zip}</td>
+                <td className="border px-4 py-2">{donation?.paymentMethod}</td>
+                <td className="border px-4 py-2">{donation?.amount}</td>
               </tr>
             ))}
           </tbody>
