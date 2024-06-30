@@ -16,6 +16,10 @@ function Dashboard() {
   const router = useRouter();
   const [events, setEvents] = useState<Event[]>([]);
   const [error, setError] = useState<string | null>(null);
+  const [currentPage, setCurrentPage] = useState<number>(1);
+  const [totalPages, setTotalPages] = useState<number>(1);
+
+  const eventsPerPage = 15; // Define how many events to show per page
 
   useEffect(() => {
     const token = localStorage.getItem("accessToken");
@@ -29,22 +33,26 @@ function Dashboard() {
       return;
     }
 
-    const fetchEvents = async () => {
+    const fetchEvents = async (page: number) => {
       try {
-        const response = await fetch("https://tracker.smart.org.np/api/event", {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
+        const response = await fetch(
+          `https://tracker.smart.org.np/api/event?page=${page}&limit=${eventsPerPage}`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
         const data = await response.json();
-        setEvents(data?.data);
+        setEvents(data.data);
+        setTotalPages(Math.ceil(data.total / eventsPerPage));
       } catch (error) {
         setError("Failed to fetch events");
       }
     };
 
-    fetchEvents();
-  }, [router]);
+    fetchEvents(currentPage);
+  }, [router, currentPage]);
 
   const handleStatusChange = async (id: number, status: string) => {
     const token = localStorage.getItem("accessToken");
@@ -79,6 +87,12 @@ function Dashboard() {
     router.push("/dashboard/create-event");
   };
 
+  const handlePageChange = (newPage: number) => {
+    if (newPage > 0 && newPage <= totalPages) {
+      setCurrentPage(newPage);
+    }
+  };
+
   return (
     <div className="relative overflow-x-auto px-6 py-3">
       <div className="flex justify-between items-center py-5">
@@ -102,10 +116,10 @@ function Dashboard() {
         <tbody className="text-md">
           {events &&
             events.length > 0 &&
-            events?.map((event, index) => (
+            events.map((event, index) => (
               <tr key={event.id} className="border-b">
                 <td className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap">
-                  {index + 1}
+                  {(currentPage - 1) * eventsPerPage + index + 1}
                 </td>
                 <td className="px-6 py-4">{event.title}</td>
                 <td className="px-6 py-4">{event.purpose}</td>
@@ -145,6 +159,25 @@ function Dashboard() {
             ))}
         </tbody>
       </table>
+      <div className="flex justify-between items-center py-5">
+        <button
+          className="px-4 py-2 bg-gray-300 rounded"
+          disabled={currentPage === 1}
+          onClick={() => handlePageChange(currentPage - 1)}
+        >
+          Previous
+        </button>
+        <span>
+          Page {currentPage} of {totalPages}
+        </span>
+        <button
+          className="px-4 py-2 bg-gray-300 rounded"
+          disabled={currentPage === totalPages}
+          onClick={() => handlePageChange(currentPage + 1)}
+        >
+          Next
+        </button>
+      </div>
     </div>
   );
 }
