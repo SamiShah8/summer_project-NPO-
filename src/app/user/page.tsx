@@ -12,9 +12,9 @@ interface Event {
   status: string;
 }
 
-function Dashboard() {
+function User() {
   const router = useRouter();
-  const [events, setEvents] = useState<Event[]>([]);
+  const [events, setEvents] = useState<any[]>([]);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
@@ -24,20 +24,25 @@ function Dashboard() {
     if (!token) {
       router.push("/login");
       return;
-    } else if (role === "user") {
-      router.push("/user");
+    } else if (role === "admin") {
+      router.push("/dashboard");
       return;
     }
 
     const fetchEvents = async () => {
       try {
-        const response = await fetch("https://tracker.smart.org.np/api/event", {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
+        const user_id = localStorage.getItem("user_id");
+        const response = await fetch(
+          `https://tracker.smart.org.np/api/eventsByUserId/${user_id}`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
         const data = await response.json();
-        setEvents(data?.data);
+        const eventArray = Object.values(data);
+        setEvents(eventArray);
       } catch (error) {
         setError("Failed to fetch events");
       }
@@ -45,35 +50,6 @@ function Dashboard() {
 
     fetchEvents();
   }, [router]);
-
-  const handleStatusChange = async (id: number, status: string) => {
-    const token = localStorage.getItem("accessToken");
-    try {
-      const response = await fetch(
-        `https://tracker.smart.org.np/api/event/${id}`,
-        {
-          method: "PATCH",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-          body: JSON.stringify({ status }),
-        }
-      );
-
-      if (response.ok) {
-        setEvents(
-          events.map((event) =>
-            event.id === id ? { ...event, status } : event
-          )
-        );
-      } else {
-        setError("Failed to update event status");
-      }
-    } catch (error) {
-      setError("Failed to update event status");
-    }
-  };
 
   const createEventHandler = () => {
     router.push("/dashboard/create-event");
@@ -122,18 +98,6 @@ function Dashboard() {
                   {event.status}
                 </td>
                 <td className="px-6 py-4 flex gap-2">
-                  <button
-                    onClick={() => handleStatusChange(event.id, "approved")}
-                    className="bg-green-500 text-white p-2 rounded"
-                  >
-                    Approve
-                  </button>
-                  <button
-                    onClick={() => handleStatusChange(event.id, "rejected")}
-                    className="bg-red-500 text-white p-2 rounded"
-                  >
-                    Reject
-                  </button>
                   <Link
                     className="bg-blue-400 text-white p-2 rounded"
                     href={`/dashboard/create-event/${event.id}`}
@@ -149,4 +113,4 @@ function Dashboard() {
   );
 }
 
-export default Dashboard;
+export default User;

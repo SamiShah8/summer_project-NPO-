@@ -2,11 +2,9 @@
 
 import { useParams, useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
-import cardList from "../components/data";
 import { esewaPayment } from "@/api/esewa";
-import { useMutation } from "react-query";
-import { generateHashCode } from "@/utils/helper";
 import KhaltiPayment from "../components/KaltiPayement";
+import { generateHashCode } from "@/utils/helper";
 
 interface EventDetail {
   id: number;
@@ -24,7 +22,6 @@ interface EventDetail {
 
 const Page = () => {
   const { id } = useParams();
-  // const event = cardList?.find((da) => da.id === id.toString());
   const [event, setEvent] = useState<EventDetail | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [formData, setFormData] = useState<any>({
@@ -38,11 +35,12 @@ const Page = () => {
     event_id: id,
     amount: "",
   });
-  const esewaClick = () => {
-    const sig = generateHashCode("100", "ab14a8f2b02c3");
+
+  const esewaClick = async (amount: string) => {
+    const sig = generateHashCode(amount, "unique-transaction-id");
 
     const formData = new FormData();
-    formData.append("amount", "100");
+    formData.append("amount", amount);
     formData.append("failure_url", "https://google.com");
     formData.append("product_delivery_charge", "0");
     formData.append("product_service_charge", "0");
@@ -51,37 +49,9 @@ const Page = () => {
     formData.append("signed_field_names", sig.signed_field_names);
     formData.append("success_url", "https://esewa.com.np");
     formData.append("tax_amount", "10");
-    formData.append("total_amount", "110");
-    formData.append("transaction_uuid", "ab14a8f2b02c3");
-    formData.append("secret", "8gBm/:&EnhH.1/q");
-
-    try {
-      const response = esewaPayment(formData);
-      console.log(response);
-    } catch (error) {
-      console.error("Error making payment:", error);
-    }
-  };
-
-  const onSubmit = async (e: any) => {
-    e.preventDefault(); // Prevent default form submission behavior
-    console.log("here");
-
-    const sig = generateHashCode("100", "ab14a8f2b02c3");
-
-    const formData = new FormData();
-    formData.append("amount", "100");
-    formData.append("failure_url", "https://google.com");
-    formData.append("product_delivery_charge", "0");
-    formData.append("product_service_charge", "0");
-    formData.append("product_code", "DONATION");
-    formData.append("signature", sig.signature);
-    formData.append("signed_field_names", sig.signed_field_names);
-    formData.append("success_url", "https://esewa.com.np");
-    formData.append("tax_amount", "10");
-    formData.append("total_amount", "110");
-    formData.append("transaction_uuid", "ab14a8f2b02c3");
-    formData.append("secret", "8gBm/:&EnhH.1/q");
+    formData.append("total_amount", (parseInt(amount) + 10).toString());
+    formData.append("transaction_uuid", "unique-transaction-id");
+    formData.append("secret", "your-secret-key");
 
     try {
       const response = await esewaPayment(formData);
@@ -142,6 +112,7 @@ const Page = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
+    // Process donation submission
     const response = await fetch("https://tracker.smart.org.np/api/donation", {
       method: "POST",
       headers: {
@@ -154,10 +125,20 @@ const Page = () => {
       const result = await response.json();
       alert("Donation received!");
       console.log(result);
+
+      // Handle payment based on selected method
+      if (formData.paymentMethod.includes("E-Sewa")) {
+        esewaClick(formData.amount);
+      } else if (formData.paymentMethod.includes("Khalti")) {
+        // Call Khalti payment function
+        // You need to create and import KhaltiPayment function/component
+      } else {
+        console.log("Offline payment selected");
+      }
     } else {
-      alert("Error submitting donation.");
     }
   };
+
   return (
     <div className="p-10 shadow-lg rounded-lg flex items-center justify-center flex-col">
       <div className="grid grid-cols-2 gap-4 mb-10">
@@ -293,7 +274,7 @@ const Page = () => {
               </label>
               <input
                 className="appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
-                id="grid-zip"
+                id="grid-amount"
                 type="text"
                 name="amount"
                 value={formData.amount}
@@ -301,33 +282,8 @@ const Page = () => {
                 placeholder="1000"
               />
             </div>
-            <div className="w-full px-3 pt-5">
-              <p>Choose your payment method:</p>
-              <div className="flex gap-2 w-full">
-                <input
-                  type="checkbox"
-                  name="paymentMethod"
-                  value="E-Sewa"
-                  onChange={handleChange}
-                />{" "}
-                E-Sewa
-                <input
-                  type="checkbox"
-                  name="paymentMethod"
-                  value="Khalti"
-                  onChange={handleChange}
-                />{" "}
-                Khalti
-                <input
-                  type="checkbox"
-                  name="paymentMethod"
-                  value="offline-payment"
-                  onChange={handleChange}
-                />{" "}
-                Offline-payment
-              </div>
-            </div>
           </div>
+          <KhaltiPayment />
           <button
             type="submit"
             className="mt-4 px-4 py-2 bg-blue-500 text-white rounded"

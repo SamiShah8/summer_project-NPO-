@@ -14,9 +14,11 @@ interface EventFormData {
   bank_name?: string;
   purpose?: string;
   status?: "approved" | "pending" | "rejected";
+  created_by?: string | null;
 }
 
 const Form = () => {
+  const user_id = localStorage.getItem("user_id");
   const initialFormData: EventFormData = {
     title: "",
     description: "",
@@ -29,6 +31,7 @@ const Form = () => {
     bank_name: "",
     purpose: "",
     status: "pending",
+    created_by: user_id,
   };
 
   const [formData, setFormData] = useState<EventFormData>(initialFormData);

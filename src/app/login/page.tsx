@@ -41,6 +41,8 @@ function Login() {
       } else {
         const data = await response.json();
         localStorage.setItem("accessToken", data.access_token);
+        localStorage.setItem("role", data.user.roles[0].name);
+        localStorage.setItem("user_id", data.user.id);
 
         location.reload();
       }

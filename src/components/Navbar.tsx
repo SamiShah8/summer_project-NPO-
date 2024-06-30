@@ -8,13 +8,19 @@ import { useEffect, useState } from "react";
 function Navbar() {
   const router = useRouter();
   const [accessToken, setAccessToken] = useState("");
+  const [role, setRole] = useState("");
+
   useEffect(() => {
     const token = localStorage.getItem("accessToken");
     if (token) setAccessToken(token);
+    const role = localStorage.getItem("role");
+    if (role) setRole(role);
   }, [accessToken, localStorage]);
 
   const handleLogout = () => {
     localStorage.removeItem("accessToken");
+    localStorage.removeItem("role");
+
     location.reload();
   };
   return (
@@ -37,12 +43,7 @@ function Navbar() {
         <Link href="/events" className="hover:text-green-400 text-xl">
           Events
         </Link>
-        <Link
-          href="/dashboard/create-event"
-          className="hover:text-green-400 text-xl"
-        >
-          Events Create
-        </Link>
+
         <Link href="/About" className="hover:text-green-400 text-xl">
           About Us
         </Link>
@@ -60,12 +61,20 @@ function Navbar() {
       {/* login button  */}
       <div className="  bg-transparent w-[150px]">
         {accessToken ? (
-          <Link
-            className="p-4 rounded-xl border w-16 space-x-1 h-10 bg-blue hover:bg-zinc-300"
-            href="/dashboard"
-          >
-            <span className="text-xl">Dashboard</span>
-          </Link>
+          <>
+            <Link
+              href="/dashboard/create-event"
+              className="hover:text-green-400 text-xl"
+            >
+              Events Create
+            </Link>
+            <Link
+              className="p-4 rounded-xl border w-16 space-x-1 h-10 bg-blue hover:bg-zinc-300"
+              href={role === "admin" ? "/dashboard" : "/user"}
+            >
+              <span className="text-xl">Dashboard</span>
+            </Link>
+          </>
         ) : (
           <Link
             className="p-4 rounded-xl border w-16 space-x-1 h-10 bg-blue hover:bg-zinc-300"
