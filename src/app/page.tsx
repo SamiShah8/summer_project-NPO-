@@ -2,7 +2,6 @@
 
 import Button from "@/components/Button";
 import CarouselHomePage from "@/components/Craousel";
-import cardList from "./events/components/data";
 import { truncateString } from "@/utils/helper";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
@@ -76,7 +75,7 @@ export default function Home() {
         </div>
       </div>
       <div className="flex w-full pt-2 px-2 gap-1 justify-center">
-        <Button title="See More" />
+        <Button onClick={() => router.push("/About")} title="See More" />
       </div>
       <h1 className="text-green-500 flex justify-center text-3xl font-semibold mt-5 ">
         Recent Events
@@ -106,7 +105,7 @@ export default function Home() {
         ))}
       </div>
 
-      <div className="flex w-full pt-2 px-2 gap-1 justify-center">
+      <div className="flex w-full pt-2 px-2 gap-1 justify-center mb-6">
         <button
           title="See More"
           className="border-none outline-none py-2 px-3 text-white font-semibold  bg-emerald-300 rounded-md"
@@ -116,7 +115,7 @@ export default function Home() {
         </button>
       </div>
 
-      <h1 className="text-green-500 flex justify-center text-3xl font-semibold my-5  ">
+      {/* <h1 className="text-green-500 flex justify-center text-3xl font-semibold my-5  ">
         Donate us
       </h1>
       <div className="pt-10 pb-10 flex justify-center bg-green-200">
@@ -236,7 +235,7 @@ export default function Home() {
             </div>
           </div>
         </form>
-      </div>
+      </div> */}
     </div>
   );
 }

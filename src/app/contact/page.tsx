@@ -1,8 +1,68 @@
-import Image from "next/image";
-import DON1 from "../../../public/assets/sam.jpg";
-import Don from "../../../public/assests/sam.jpg";
+"use client";
+import axios from "axios";
+import { ChangeEvent, useState } from "react";
+import type { MouseEvent } from "react";
+
+interface FormData {
+  name: string;
+  email: string;
+  address: string;
+  suggestion: string;
+}
 
 function Contact() {
+  // Todo: set the proper url
+  const postUrl = "";
+  const [isPending, setIsPending] = useState(false);
+  const [formData, setFormData] = useState<FormData>({
+    name: "",
+    email: "",
+    address: "",
+    suggestion: "",
+  });
+
+  const inputChangeHandler = (
+    e: ChangeEvent<HTMLInputElement> | ChangeEvent<HTMLTextAreaElement>
+  ) => {
+    const { name, value } = e.target;
+    setFormData({ ...formData, [name]: value });
+  };
+
+  const submitHandler = async (
+    e: MouseEvent<HTMLButtonElement, globalThis.MouseEvent>
+  ) => {
+    e.preventDefault();
+    setIsPending(true);
+
+    if (
+      formData.email === "" ||
+      formData.name === "" ||
+      formData.address === "" ||
+      formData.suggestion === ""
+    ) {
+      alert("field cannot be empty");
+      setIsPending(false);
+      return;
+    }
+    try {
+      await axios.post(postUrl, formData, {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+      setFormData({
+        name: "",
+        email: "",
+        address: "",
+        suggestion: "",
+      });
+    } catch (error) {
+      alert("something went wrong. Try again!");
+    } finally {
+      setIsPending(false);
+    }
+  };
+
   return (
     <div>
       <div className="  bg-contact-hero-image no-repeat bg-cover bg-center flex justify-center items-center flex-col h-96 ">
@@ -20,55 +80,75 @@ function Contact() {
         </h1>
 
         <div className="grid grid-cols-2 gap-4 mb-10">
-          <form className="flex flex-col h-full w-full items-center bg-gray-100  justify-center ">
+          <form
+            onClick={(e) => {
+              e.preventDefault();
+            }}
+            className="flex flex-col h-full w-full items-center bg-gray-100  justify-center "
+          >
             <div className="flex w-full pt-6 px-2 flex-col ">
               <label className=" items-center text-black" htmlFor="">
-                Name:{" "}
+                Name:
               </label>
               <input
-                className="border-2 h-20 p-2 rounded-md flex-1 "
+                required={true}
+                className="border-2 px-2 h-20 p-2 rounded-md flex-1 "
                 type="text"
                 name="name"
+                onChange={inputChangeHandler}
+                value={formData.name}
                 placeholder="Enter your Name"
               />
             </div>
             <div className="flex w-full pt-6 px-2 gap-1 flex-col">
               <label className=" flex items-center text-black" htmlFor="">
-                Adress:{" "}
+                Adress:
               </label>
               <input
-                className=" border-2  h-20 p-2 rounded-md flex-1"
+                required={true}
+                className=" border-2 px-2  h-20 p-2 rounded-md flex-1"
                 type="text"
                 name="address"
+                onChange={inputChangeHandler}
+                value={formData.address}
                 placeholder="Enter your  Address"
               />
             </div>
 
             <div className="flex w-full pt-6 px-2 gap-1  flex-col">
               <label className="flex items-center text-black" htmlFor="">
-                Email:{" "}
+                Email:
               </label>
               <input
-                className="border-2 h-20 p-2 rounded-md flex-1 "
-                type="text"
-                name="name"
+                className="border-2 px-2 h-20 p-2 rounded-md flex-1 "
+                type="email"
+                name="email"
+                required={true}
+                onChange={inputChangeHandler}
+                value={formData.email}
                 placeholder="Enter your Email"
               />
             </div>
 
             <div className="flex w-full pt-6 px-2 gap-1 flex-col">
               <label className="flex items-center text-black" htmlFor="">
-                Suggestion:{" "}
+                Suggestion:
               </label>
               <textarea
-                className="border-2 h-80 rounded-md flex-1"
-                name="a4ddress"
+                className="border-2 px-2 h-80 rounded-md flex-1"
+                name="suggestion"
                 cols={10}
+                required={true}
+                onChange={inputChangeHandler}
+                value={formData.suggestion}
               ></textarea>
             </div>
             <div className="flex w-full pt-6 px-2 gap-1 justify-center">
-              <button className="bg-green-500 text-white p-2 w-40">
-                Submit
+              <button
+                onClick={submitHandler}
+                className="bg-green-500 text-white p-2 w-40"
+              >
+                {isPending === true ? "submitting" : "submit"}
               </button>
             </div>
           </form>

@@ -1,10 +1,10 @@
 import { useState } from "react";
 
 const images = [
-  "/assests/flood.jpg",
+  "/assests/donation5.jpg",
   "/assests/donation2.jpg",
-  "/assests/donation4.jpg",
-  "/assests/d.jpg",
+  "/assests/donation1.jpg",
+  "/assests/asha2.jpg",
   // Add more image paths here
 ];
 

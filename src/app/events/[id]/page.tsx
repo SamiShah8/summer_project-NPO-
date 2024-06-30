@@ -1,6 +1,6 @@
 "use client";
 
-import { useParams, useRouter } from "next/navigation";
+import { useParams } from "next/navigation";
 import React, { useEffect, useState } from "react";
 import { esewaPayment } from "@/api/esewa";
 import KhaltiPayment from "../components/KaltiPayement";
@@ -168,7 +168,7 @@ const Page = () => {
                 First Name
               </label>
               <input
-                className="appearance-none block w-full bg-gray-200 text-gray-700 border border-red-500 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white"
+                className="appearance-none block w-full bg-gray-200 text-gray-700 border hover: rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
                 id="grid-first-name"
                 type="text"
                 name="first_name"
@@ -176,9 +176,9 @@ const Page = () => {
                 onChange={handleChange}
                 placeholder="Samiksha"
               />
-              <p className="text-red-500 text-xs italic">
+              {/* <p className="text-red-500 text-xs italic">
                 Please fill out this field.
-              </p>
+              </p> */}
             </div>
             <div className="w-full md:w-1/2 px-3">
               <label className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2">

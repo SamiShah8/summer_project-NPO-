@@ -23,6 +23,7 @@ function Navbar() {
 
     location.reload();
   };
+
   return (
     <header className="flex justify-between items-center h-header-height gap-5 bg-slate-50 shadow-md fixed top-0 w-full  z-50">
       {/* logo  */}
@@ -59,18 +60,19 @@ function Navbar() {
         {accessToken && <button onClick={handleLogout}>Logout</button>}
       </nav>
       {/* login button  */}
-      <div className="  bg-transparent w-[150px]">
+      <div className="  bg-transparent w-[150px],   ">
         {accessToken ? (
           <>
             <Link
               href="/dashboard/create-event"
-              className="hover:text-green-400 text-xl"
+              className="hover:text-green-400 text-xl  "
             >
+              {" "}
               Events Create
             </Link>
             <Link
               className="p-4 rounded-xl border w-16 space-x-1 h-10 bg-blue hover:bg-zinc-300"
-              href={role === "admin" ? "/dashboard" : "/user"}
+              href={role === "super-admin" ? "/dashboard" : "/user"}
             >
               <span className="text-xl">Dashboard</span>
             </Link>
