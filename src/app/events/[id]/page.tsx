@@ -27,7 +27,17 @@ const Page = () => {
   // const event = cardList?.find((da) => da.id === id.toString());
   const [event, setEvent] = useState<EventDetail | null>(null);
   const [error, setError] = useState<string | null>(null);
-
+  const [formData, setFormData] = useState<any>({
+    firstName: "",
+    lastName: "",
+    email: "",
+    country: "",
+    city: "",
+    zip: "",
+    paymentMethod: [],
+    event_id: id,
+    amount: "",
+  });
   const esewaClick = () => {
     const sig = generateHashCode("100", "ab14a8f2b02c3");
 
@@ -115,7 +125,39 @@ const Page = () => {
     return <div>Loading...</div>;
   }
 
-  console.log(event);
+  const handleChange = (e) => {
+    const { name, value, type, checked } = e.target;
+    if (type === "checkbox") {
+      setFormData((prevState) => {
+        const paymentMethod = checked
+          ? [...prevState.paymentMethod, value]
+          : prevState.paymentMethod.filter((method) => method !== value);
+        return { ...prevState, paymentMethod };
+      });
+    } else {
+      setFormData({ ...formData, [name]: value });
+    }
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    const response = await fetch("https://tracker.smart.org.np/api/donation", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(formData),
+    });
+
+    if (response.ok) {
+      const result = await response.json();
+      alert("Donation received!");
+      console.log(result);
+    } else {
+      alert("Error submitting donation.");
+    }
+  };
   return (
     <div className="p-10 shadow-lg rounded-lg flex items-center justify-center flex-col">
       <div className="grid grid-cols-2 gap-4 mb-10">
@@ -138,7 +180,7 @@ const Page = () => {
       </div>
 
       <div className="pt-10 pb-10 flex">
-        <form className="w-full" onSubmit={onSubmit}>
+        <form className="w-full" onSubmit={handleSubmit}>
           <div className="flex flex-wrap -mx-3 mb-6">
             <div className="w-full md:w-1/2 px-3 mb-6 md:mb-0">
               <label className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2">
@@ -148,6 +190,9 @@ const Page = () => {
                 className="appearance-none block w-full bg-gray-200 text-gray-700 border border-red-500 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white"
                 id="grid-first-name"
                 type="text"
+                name="first_name"
+                value={formData.first_name}
+                onChange={handleChange}
                 placeholder="Samiksha"
               />
               <p className="text-red-500 text-xs italic">
@@ -162,6 +207,9 @@ const Page = () => {
                 className="appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
                 id="grid-last-name"
                 type="text"
+                name="last_name"
+                value={formData.last_name}
+                onChange={handleChange}
                 placeholder="Shah"
               />
             </div>
@@ -176,6 +224,9 @@ const Page = () => {
                 className="appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
                 id="grid-email"
                 type="email"
+                name="email"
+                value={formData.email}
+                onChange={handleChange}
                 placeholder="Email"
               />
             </div>
@@ -189,6 +240,9 @@ const Page = () => {
                 className="appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
                 id="grid-country"
                 type="text"
+                name="country"
+                value={formData.country}
+                onChange={handleChange}
                 placeholder="Nepal"
               />
             </div>
@@ -200,10 +254,13 @@ const Page = () => {
                 <select
                   className="block appearance-none w-full bg-gray-200 border border-gray-200 text-gray-700 py-3 px-4 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
                   id="grid-city"
+                  name="city"
+                  value={formData.city}
+                  onChange={handleChange}
                 >
-                  <option>Kathmandu</option>
-                  <option>Pokhara</option>
-                  <option>Tikapur</option>
+                  <option value="Kathmandu">Kathmandu</option>
+                  <option value="Pokhara">Pokhara</option>
+                  <option value="Tikapur">Tikapur</option>
                 </select>
                 <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
                   <svg
@@ -216,7 +273,7 @@ const Page = () => {
                 </div>
               </div>
             </div>
-            <div className="w-full md:w-1/3 px-3 mb-6 md:mb-0 gap-3">
+            <div className="w-full md:w-1/3 px-3 mb-6 md:mb-0">
               <label className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2">
                 Zip
               </label>
@@ -224,43 +281,59 @@ const Page = () => {
                 className="appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
                 id="grid-zip"
                 type="text"
+                name="zip"
+                value={formData.zip}
+                onChange={handleChange}
                 placeholder="90210"
               />
             </div>
-            <div className="pt-5">
+            <div className="w-full md:w-1/3 px-3 mb-6 md:mb-0">
+              <label className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2">
+                Amount
+              </label>
+              <input
+                className="appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
+                id="grid-zip"
+                type="text"
+                name="amount"
+                value={formData.amount}
+                onChange={handleChange}
+                placeholder="1000"
+              />
+            </div>
+            <div className="w-full px-3 pt-5">
               <p>Choose your payment method:</p>
-              <br />
-              <div className="flex content-between gap-2 w-full">
+              <div className="flex gap-2 w-full">
                 <input
-                  className=""
                   type="checkbox"
                   name="paymentMethod"
                   value="E-Sewa"
-                />
+                  onChange={handleChange}
+                />{" "}
                 E-Sewa
                 <input
-                  className=""
                   type="checkbox"
                   name="paymentMethod"
                   value="Khalti"
-                />
+                  onChange={handleChange}
+                />{" "}
                 Khalti
                 <input
                   type="checkbox"
                   name="paymentMethod"
                   value="offline-payment"
-                />
+                  onChange={handleChange}
+                />{" "}
                 Offline-payment
               </div>
-              <button
-                onClick={esewaClick}
-                className="mt-4 px-4 py-2 bg-blue-500 text-white rounded"
-              >
-                E-Sewa
-              </button>
-              <KhaltiPayment />
             </div>
           </div>
+          <button
+            type="submit"
+            className="mt-4 px-4 py-2 bg-blue-500 text-white rounded"
+          >
+            Submit Donation
+          </button>
         </form>
       </div>
     </div>

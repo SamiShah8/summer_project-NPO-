@@ -22,6 +22,7 @@ function EventDetailPage() {
   const { id } = useParams();
   const [event, setEvent] = useState<EventDetail | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [donation, setDonation] = useState<any>(null);
 
   useEffect(() => {
     const token = localStorage.getItem("accessToken");
@@ -50,6 +51,36 @@ function EventDetailPage() {
 
     if (id) {
       fetchEvent();
+    }
+  }, [id]);
+
+  useEffect(() => {
+    const token = localStorage.getItem("accessToken");
+
+    const fetchDonation = async () => {
+      try {
+        const response = await fetch(
+          `https://tracker.smart.org.np/api/donation/${id}`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+
+        if (!response.ok) {
+          throw new Error("Failed to fetch event details");
+        }
+
+        const data = await response.json();
+        setDonation(data);
+      } catch (error) {
+        setError("Unable to fetch the data");
+      }
+    };
+
+    if (id) {
+      fetchDonation();
     }
   }, [id]);
 
@@ -116,6 +147,36 @@ function EventDetailPage() {
             />
           </div>
         )}
+      </div>
+      <div className="overflow-x-auto mt-5">
+        <table className="min-w-full bg-white">
+          <thead className="bg-gray-800 text-white">
+            <tr>
+              <th className="px-4 py-2">First Name</th>
+              <th className="px-4 py-2">Last Name</th>
+              <th className="px-4 py-2">Email</th>
+              <th className="px-4 py-2">Country</th>
+              <th className="px-4 py-2">City</th>
+              <th className="px-4 py-2">Zip</th>
+              <th className="px-4 py-2">Payment Method</th>
+              <th className="px-4 py-2">Amount</th>
+            </tr>
+          </thead>
+          <tbody>
+            {donation.map((donation) => (
+              <tr key={donation.id}>
+                <td className="border px-4 py-2">{donation.first_name}</td>
+                <td className="border px-4 py-2">{donation.last_name}</td>
+                <td className="border px-4 py-2">{donation.email}</td>
+                <td className="border px-4 py-2">{donation.country}</td>
+                <td className="border px-4 py-2">{donation.city}</td>
+                <td className="border px-4 py-2">{donation.zip}</td>
+                <td className="border px-4 py-2">{donation.paymentMethod}</td>
+                <td className="border px-4 py-2">{donation.amount}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
       </div>
     </div>
   );
